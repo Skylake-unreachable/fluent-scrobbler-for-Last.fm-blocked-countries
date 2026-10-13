@@ -6,32 +6,25 @@
 
 > **Fork:** a fork of [Fluent Scrobbler](https://github.com/snw-mint/fluent-scrobbler) with a built-in SOCKS5 proxy for countries where Last.fm is blocked.
 > The proxy is configured in **Account → Proxy** (`Disabled` by default, `Manual` or `Auto` with a remote list of free SOCKS5 servers).
+> <img width="1915" height="1042" alt="UI proxy" src="https://github.com/user-attachments/assets/ae6de7af-254d-43b8-ab7f-5710cfb838b7" />
 
+
+---
 <p align="center">
-  <a href="https://github.com/snw-mint/fluent-scrobbler/releases"><img src="https://img.shields.io/github/v/release/snw-mint/fluent-scrobbler?include_prereleases&display_name=release&style=plastic&color=%232485EC" alt="GitHub Release" /></a>
-  <a href="https://github.com/snw-mint/fluent-scrobbler/activity"><img src="https://img.shields.io/github/last-commit/snw-mint/fluent-scrobbler?style=plastic&color=%234767E4" alt="last commit" /></a>
-  <a href="https://github.com/snw-mint/fluent-scrobbler?tab=GPL-3.0-1-ov-file"><img src="https://img.shields.io/badge/GPLv3-message?style=plastic&label=license&color=%237642E6" alt="license" /></a>
-  <img src="https://img.shields.io/badge/yes-label?style=plastic&label=maintained" alt="maintained" />
+  <strong>A Lightweight, and Modern Scrobbler for Windows 10 & 11</strong>
 </p>
 
 ![Fluent Scrobbler](Repo/mockup.webp)
 
-<p align="center">
-  <strong>A Lightweight, and Modern Scrobbler for Windows 11</strong>
-</p>
+
 
 <p align="center">
   <a href="https://snw-mint.github.io/fluent-scrobbler/">Overview</a> •
-  <a href="https://github.com/snw-mint/fluent-scrobbler/releases">Installation</a> •
   <a href="https://snw-mint.github.io/fluent-scrobbler/privacy.html">Privacy</a> •
   <a href="https://snw-mint.github.io/fluent-scrobbler/terms.html">Terms</a>
 </p>
 
-<p align="center">
-  <a href="https://get.microsoft.com/installer/download/9N5RMD87SPVM?referrer=appbadge" target="_self" >
-    <img src="https://get.microsoft.com/images/en-us%20dark.svg" width="200"/>
-  </a>
-</p>
+
 
 ---
 
@@ -45,7 +38,7 @@
 
 ## Installation & Setup
 
-1. **Download**: Visit the [Releases](https://github.com/snw-mint/fluent-scrobbler/releases) page and download the setup installer (`FluentScrobbler-Setup.exe`).
+1. **Download**: Visit the [Releases](https://github.com/Skylake-unreachable/fluent-scrobbler-for-Last.fm-blocked-countries/releases) page and download the setup installer (`FluentScrobbler-Setup-x64.exe / FluentScrobbler-Setup-arm64.exe`).
 2. **Install**: Run the installer and follow the on-screen instructions.
 3. **Connect Account**: Open Fluent Scrobbler, navigate to the **Account** section, and click **Connect to Last.fm** to authorize the application.
 4. **Start Scrobbling**: Play music in any Windows media player or web browser, and your listening history will scrobble automatically.
@@ -74,7 +67,7 @@ I value your privacy. Please read the [Privacy Policy](https://snw-mint.github.i
 
 Because this project is in Beta, user feedback is very valuable to me:
 
-- To report a bug or request a new feature, please open an issue on [GitHub Issues](https://github.com/snw-mint/fluent-scrobbler/issues).
+- To report a bug or request a new feature, please open an issue on [GitHub Issues](https://github.com/Skylake-unreachable/fluent-scrobbler-for-Last.fm-blocked-countries/issues).
 - For security concerns, please refer to my [Security Policy](SECURITY.md).
 
 ## License & Legal Notice
@@ -84,7 +77,3 @@ This project is licensed under the **GNU General Public License v3.0** - see the
 ### Legal Disclaimer
 
 Fluent Scrobbler is an independent open-source application developed by me. It is not affiliated with, endorsed by, or sponsored by Last.fm, CBS Interactive. All trademarks and brand names belong to their respective owners.
-
----
-
-by [Snow Mint](https://github.com/snw-mint/fluent-scrobbler)
