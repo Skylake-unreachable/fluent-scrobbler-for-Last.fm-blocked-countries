@@ -412,7 +412,7 @@ namespace FluentScrobbler.Views
                             var failDialog = new ContentDialog
                             {
                                 Title = "Import Failed",
-                                Content = "The selected file is not a valid Fluent Scrobbler settings backup or is corrupted.",
+                                Content = "The selected file is not a valid FluentScrobbler for Last.fm blocked countries settings backup or is corrupted.",
                                 CloseButtonText = "OK",
                                 DefaultButton = ContentDialogButton.Close,
                                 XamlRoot = this.XamlRoot

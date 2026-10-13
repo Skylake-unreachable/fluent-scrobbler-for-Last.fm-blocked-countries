@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.Windows.AppLifecycle;
 using Microsoft.Windows.AppNotifications;
 using FluentScrobbler.Services;
+using FluentScrobbler.Services.Proxy;
 
 namespace FluentScrobbler
 {
@@ -101,6 +102,10 @@ namespace FluentScrobbler
 
             AppInstance.GetCurrent().Activated += OnAppInstanceActivated;
             _window = new MainWindow();
+
+            // Инициализация прокси-сервиса (код форка в Services/Proxy): восстановление настроек,
+            // ежечасная проверка текущего прокси и предзагрузка списка в режиме Auto.
+            _ = ProxyService.Instance.InitializeAsync();
 
             var currentArgs = AppInstance.GetCurrent().GetActivatedEventArgs();
             bool isStartupTask = currentArgs != null && currentArgs.Kind == ExtendedActivationKind.StartupTask;

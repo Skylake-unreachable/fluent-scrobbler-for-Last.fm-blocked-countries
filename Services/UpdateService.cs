@@ -11,8 +11,8 @@ namespace FluentScrobbler.Services
         public static UpdateService Instance => _instance.Value;
 
         private readonly HttpClient _httpClient;
-        private const string ReleasesApiUrl = "https://api.github.com/repos/snw-mint/fluent-scrobbler/releases";
-        public const string DefaultReleasesUrl = "https://github.com/snw-mint/fluent-scrobbler/releases";
+        private const string ReleasesApiUrl = "https://api.github.com/repos/Skylake-unreachable/fluent-scrobbler-for-Last.fm-blocked-countries/releases";
+        public const string DefaultReleasesUrl = "https://github.com/Skylake-unreachable/fluent-scrobbler-for-Last.fm-blocked-countries/releases";
         public const string StoreProductUrl = "ms-windows-store://pdp/?ProductId=9N5RMD87SPVM";
         private const string LastCheckKey = "LastUpdateCheckUtc";
         private static readonly TimeSpan Cooldown = TimeSpan.FromHours(24);

@@ -25,7 +25,7 @@ namespace FluentScrobbler.Services
         private static ScrobblerBackgroundService? _instance;
         public static ScrobblerBackgroundService Instance => _instance ??= new ScrobblerBackgroundService();
 
-        private readonly IScrobbleProvider[] _providers = new IScrobbleProvider[] { new LastFmService() };
+        private readonly LastFmService _lastFmService = new();
         private readonly MediaArtResolver _mediaArtResolver = new();
         private readonly WindowsMediaService _windowsMediaService = new();
         private readonly ILegacyPlayerWatcher _legacyPlayerWatcher = LegacyPlayerWatcher.Instance;
@@ -33,7 +33,6 @@ namespace FluentScrobbler.Services
         private readonly SemaphoreSlim _sessionLock = new(1, 1);
         private static readonly ConcurrentDictionary<string, DateTimeOffset> _scrobbledTracksHistory = new(StringComparer.OrdinalIgnoreCase);
         private readonly System.Collections.Generic.HashSet<string> _notifiedNewInstances = new(StringComparer.OrdinalIgnoreCase);
-        private readonly ConcurrentDictionary<string, GlobalSystemMediaTransportControlsSessionPlaybackStatus> _lastPlaybackStatus = new(StringComparer.OrdinalIgnoreCase);
 
         private CancellationTokenSource? _cts;
         private GlobalSystemMediaTransportControlsSessionManager? _sessionMgr;
@@ -59,50 +58,6 @@ namespace FluentScrobbler.Services
         public NowPlayingInfo? CurrentTrack { get; private set; }
         public ScrobbleStatusInfo CurrentStatus { get; private set; } = new(ScrobbleStatus.Idle);
 
-        public void ForgetSource(string appId)
-        {
-            if (string.IsNullOrWhiteSpace(appId)) return;
-            _notifiedNewInstances.Remove(appId);
-
-            if (string.Equals(_activeSessionId, appId, StringComparison.OrdinalIgnoreCase))
-            {
-                _activeSessionId = null;
-            }
-
-            if (string.Equals(_currentAppId, appId, StringComparison.OrdinalIgnoreCase))
-            {
-                _currentAppId = string.Empty;
-                _isPlaying = false;
-                CurrentTrack = null;
-                NowPlayingChanged?.Invoke(this, null);
-                _ = ClearDiscordPresenceAsync();
-                SetStatus(ScrobbleStatus.Idle);
-            }
-
-            try
-            {
-                if (_sessionMgr != null)
-                {
-                    var sessions = _sessionMgr.GetSessions();
-                    var match = sessions?.FirstOrDefault(s => string.Equals(s.SourceAppUserModelId, appId, StringComparison.OrdinalIgnoreCase));
-                    if (match != null)
-                    {
-                        var pb = match.GetPlaybackInfo();
-                        if (pb != null)
-                        {
-                            _lastPlaybackStatus[appId] = pb.PlaybackStatus;
-                            return;
-                        }
-                    }
-                }
-            }
-            catch
-            {
-            }
-
-            _lastPlaybackStatus.TryRemove(appId, out _);
-        }
-
         public void Start()
         {
             if (_cts != null) return;
@@ -120,7 +75,7 @@ namespace FluentScrobbler.Services
 
         private void OnLegacyTrackChanged(object? sender, LegacyTrackInfo info)
         {
-            if (info.State == LegacyPlaybackState.Playing && !string.IsNullOrWhiteSpace(info.SourceApp))
+            if (info.State != LegacyPlaybackState.NotRunning && !string.IsNullOrWhiteSpace(info.SourceApp))
             {
                 RegisterLegacySourceIfNew(info.SourceApp, info.DisplayName);
             }
@@ -215,17 +170,7 @@ namespace FluentScrobbler.Services
         {
             try
             {
-                bool anyLoggedIn = false;
-                for (int i = 0; i < _providers.Length; i++)
-                {
-                    if (_providers[i].IsLoggedIn())
-                    {
-                        anyLoggedIn = true;
-                        break;
-                    }
-                }
-
-                if (!anyLoggedIn)
+                if (!_lastFmService.IsLoggedIn())
                 {
                     bool wasPlaying = _isPlaying || CurrentTrack != null;
                     _isPlaying = false;
@@ -259,47 +204,37 @@ namespace FluentScrobbler.Services
                 if (_sessionMgr == null) return;
 
                 var sessions = _sessionMgr.GetSessions();
-                var playingSessions = new List<GlobalSystemMediaTransportControlsSession>();
                 if (sessions != null)
                 {
                     var knownSources = _windowsMediaService.GetKnownSources();
                     foreach (var s in sessions)
                     {
                         string sAppId = s.SourceAppUserModelId;
-                        if (string.IsNullOrWhiteSpace(sAppId)) continue;
-
-                        GlobalSystemMediaTransportControlsSessionPlaybackInfo? pb = null;
-                        try
+                        if (!string.IsNullOrWhiteSpace(sAppId))
                         {
-                            pb = s.GetPlaybackInfo();
-                        }
-                        catch
-                        {
-                        }
-
-                        var currentStatus = pb?.PlaybackStatus;
-                        bool hasPrevStatus = _lastPlaybackStatus.TryGetValue(sAppId, out var prevStatus);
-                        if (currentStatus.HasValue)
-                        {
-                            _lastPlaybackStatus[sAppId] = currentStatus.Value;
-                        }
-
-                        bool isPlaying = currentStatus == GlobalSystemMediaTransportControlsSessionPlaybackStatus.Playing;
-                        bool userGavePlay = isPlaying && (!hasPrevStatus || prevStatus != GlobalSystemMediaTransportControlsSessionPlaybackStatus.Playing);
-
-                        if (isPlaying && !knownSources.Any(k => string.Equals(k, sAppId, StringComparison.OrdinalIgnoreCase)))
-                        {
-                            if (userGavePlay && !_notifiedNewInstances.Contains(sAppId))
+                            if (!knownSources.Contains(sAppId) && !_notifiedNewInstances.Contains(sAppId))
                             {
                                 _notifiedNewInstances.Add(sAppId);
                                 string displayName = WindowsMediaService.FormatAppDisplayName(sAppId);
-                                _windowsMediaService.RegisterKnownSource(sAppId, displayName);
                                 NotificationService.ShowNewInstanceNotification(displayName);
                                 NewSourceDetected?.Invoke(this, displayName);
                             }
                         }
+                    }
+                }
 
-                        if (_windowsMediaService.IsSourceAllowed(sAppId) && isPlaying)
+                var playingSessions = new List<GlobalSystemMediaTransportControlsSession>();
+                if (sessions != null)
+                {
+                    foreach (var s in sessions)
+                    {
+                        string id = s.SourceAppUserModelId;
+                        if (string.IsNullOrWhiteSpace(id)) continue;
+
+                        if (!_windowsMediaService.IsSourceAllowed(id)) continue;
+
+                        var pb = s.GetPlaybackInfo();
+                        if (pb != null && pb.PlaybackStatus == GlobalSystemMediaTransportControlsSessionPlaybackStatus.Playing)
                         {
                             playingSessions.Add(s);
                         }
@@ -399,7 +334,7 @@ namespace FluentScrobbler.Services
             try
             {
                 var knownSources = _windowsMediaService.GetKnownSources();
-                if (!knownSources.Any(k => string.Equals(k, appId, StringComparison.OrdinalIgnoreCase)) && !_notifiedNewInstances.Contains(appId))
+                if (!knownSources.Contains(appId) && !_notifiedNewInstances.Contains(appId))
                 {
                     _notifiedNewInstances.Add(appId);
                     string name = !string.IsNullOrWhiteSpace(displayName)
@@ -478,13 +413,7 @@ namespace FluentScrobbler.Services
                 NowPlayingChanged?.Invoke(this, CurrentTrack);
                 SetStatus(ScrobbleStatus.Listening, _currentTrack, _currentArtist, _currentAlbum);
 
-                for (int i = 0; i < _providers.Length; i++)
-                {
-                    if (_providers[i].IsLoggedIn())
-                    {
-                        await _providers[i].UpdateNowPlayingAsync(_currentTrack, _currentArtist, _currentAlbum);
-                    }
-                }
+                await _lastFmService.UpdateNowPlayingAsync(_currentTrack, _currentArtist, _currentAlbum);
                 _ = UpdateDiscordPresenceAsync(_currentTrack, _currentArtist, _currentAlbum, _trackStartTime);
             }
             else
@@ -521,13 +450,7 @@ namespace FluentScrobbler.Services
                     _hasScrobbledCurrentTrack = false;
                     _lastTimelinePosition = currentPosition;
 
-                    for (int i = 0; i < _providers.Length; i++)
-                    {
-                        if (_providers[i].IsLoggedIn())
-                        {
-                            await _providers[i].UpdateNowPlayingAsync(_currentTrack, _currentArtist, _currentAlbum);
-                        }
-                    }
+                    await _lastFmService.UpdateNowPlayingAsync(_currentTrack, _currentArtist, _currentAlbum);
                     _ = UpdateDiscordPresenceAsync(_currentTrack, _currentArtist, _currentAlbum, _trackStartTime);
                 }
                 else
@@ -604,14 +527,7 @@ namespace FluentScrobbler.Services
                 bool success = false;
                 try
                 {
-                    for (int i = 0; i < _providers.Length; i++)
-                    {
-                        if (_providers[i].IsLoggedIn())
-                        {
-                            bool pSuccess = await _providers[i].ScrobbleTrackAsync(_currentTrack, _currentArtist, _currentAlbum, _trackStartTime);
-                            if (pSuccess) success = true;
-                        }
-                    }
+                    success = await _lastFmService.ScrobbleTrackAsync(_currentTrack, _currentArtist, _currentAlbum, _trackStartTime);
                 }
                 catch (Exception ex) when (ex is System.Net.Http.HttpRequestException || ex is TaskCanceledException)
                 {

@@ -26,7 +26,7 @@
 
                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
                     <TextBlock Text="Open Source Licenses" Style="{ThemeResource TitleTextBlockStyle}" FontWeight="Bold" />
-                    <TextBlock Text="Third-party open-source libraries and components used in Fluent Scrobbler." Style="{ThemeResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="0,4,0,0" />
+                    <TextBlock Text="Third-party open-source libraries and components used in FluentScrobbler for Last.fm blocked countries." Style="{ThemeResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" Margin="0,4,0,0" />
                 </StackPanel>
             </Grid>
 
@@ -34,7 +34,7 @@
                 <StackPanel Spacing="12">
                     <Grid>
                         <StackPanel Spacing="2" VerticalAlignment="Center">
-                            <TextBlock Text="Fluent Scrobbler" Style="{ThemeResource BodyStrongTextBlockStyle}" />
+                            <TextBlock Text="FluentScrobbler for Last.fm blocked countries" Style="{ThemeResource BodyStrongTextBlockStyle}" />
                             <TextBlock Text="GPL-3.0 License" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                         </StackPanel>
                         <HyperlinkButton Content="GitHub" NavigateUri="https://github.com/snw-mint/fluent-scrobbler" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Right" />

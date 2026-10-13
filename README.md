@@ -2,7 +2,10 @@
   <img src="Assets\logo.png" width="70" alt="Fluent Scrobbler Logo" />
 </p>
 
-<h1 align="center">Fluent Scrobbler</h1>
+<h1 align="center">FluentScrobbler for Last.fm blocked countries</h1>
+
+> **Fork:** a fork of [Fluent Scrobbler](https://github.com/snw-mint/fluent-scrobbler) with a built-in SOCKS5 proxy for countries where Last.fm is blocked.
+> The proxy is configured in **Account → Proxy** (`Disabled` by default, `Manual` or `Auto` with a remote list of free SOCKS5 servers).
 
 <p align="center">
   <a href="https://github.com/snw-mint/fluent-scrobbler/releases"><img src="https://img.shields.io/github/v/release/snw-mint/fluent-scrobbler?include_prereleases&display_name=release&style=plastic&color=%232485EC" alt="GitHub Release" /></a>

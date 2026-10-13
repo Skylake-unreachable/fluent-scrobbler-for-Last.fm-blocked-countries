@@ -47,7 +47,7 @@ namespace FluentScrobbler
             AppVersionText.Text = AppInfoService.FormattedVersion;
             this.ExtendsContentIntoTitleBar = true;
             this.SetTitleBar(AppTitleBar);
-            this.Title = "Fluent Scrobbler";
+            this.Title = "FluentScrobbler for Last.fm blocked countries";
 
             var windowHandle = WinRT.Interop.WindowNative.GetWindowHandle(this);
             var windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(windowHandle);
@@ -69,7 +69,7 @@ namespace FluentScrobbler
             {
                 if (e.Key == Windows.System.VirtualKey.F12)
                 {
-                    await CapturarScreenshot4KAsync();
+                    await CapturarMarketing4KAsync();
                 }
             };
 
@@ -77,7 +77,7 @@ namespace FluentScrobbler
             OfflineCacheWorker.Instance.Start();
         }
 
-        public async Task CapturarScreenshot4KAsync(string nomeArquivo = "FluentScrobbler_Screenshot_4K.png")
+        public async Task CapturarMarketing4KAsync(string nomeArquivo = "FluentScrobbler_Marketing_4K.png")
         {
             IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
             SizeInt32 tamanhoOriginal = this.AppWindow.Size;
@@ -86,14 +86,10 @@ namespace FluentScrobbler
             int alturaBase = 1080;
             int larguraFinal4K = 3840;
             int alturaFinal4K = 2160;
-            
-            var oldBackground = this.RootGrid.Background;
 
             try
             {
                 SetWindowPos(hWnd, IntPtr.Zero, 0, 0, larguraBase, alturaBase, 0x0004 | 0x0010);
-                
-                this.RootGrid.Background = (Microsoft.UI.Xaml.Media.Brush)Application.Current.Resources["ApplicationPageBackgroundThemeBrush"];
 
                 this.RootGrid.Width = larguraBase;
                 this.RootGrid.Height = alturaBase;
@@ -130,7 +126,7 @@ namespace FluentScrobbler
             }
             finally
             {
-                this.RootGrid.Background = oldBackground;
+
                 this.RootGrid.ClearValue(FrameworkElement.WidthProperty);
                 this.RootGrid.ClearValue(FrameworkElement.HeightProperty);
 
@@ -145,11 +141,11 @@ namespace FluentScrobbler
         {
             AppTrayIcon = new TaskbarIcon
             {
-                ToolTipText = "Fluent Scrobbler - Idle",
+                ToolTipText = "FluentScrobbler for Last.fm blocked countries - Idle",
                 LeftClickCommand = new TrayRelayCommand(OnTrayIconLeftClick)
             };
 
-            var openItem = new MenuFlyoutItem { Text = "Open Fluent Scrobbler" };
+            var openItem = new MenuFlyoutItem { Text = "Open FluentScrobbler for Last.fm blocked countries" };
             openItem.Click += OnOpenWindowClick;
 
             var exitItem = new MenuFlyoutItem { Text = "Exit" };
@@ -246,7 +242,7 @@ namespace FluentScrobbler
             if (_currentScrobbleStatus.Status == ScrobbleStatus.Idle ||
                 (string.IsNullOrEmpty(_currentScrobbleStatus.Track) && string.IsNullOrEmpty(_currentScrobbleStatus.Artist)))
             {
-                AppTrayIcon.ToolTipText = $"Fluent Scrobbler\n{statusText}";
+                AppTrayIcon.ToolTipText = $"FluentScrobbler for Last.fm blocked countries\n{statusText}";
             }
             else
             {

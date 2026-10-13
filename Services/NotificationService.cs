@@ -42,13 +42,47 @@ namespace FluentScrobbler.Services
             }
         }
 
+        public static void ShowInfoNotification(string message)
+        {
+            try
+            {
+                var notification = new AppNotificationBuilder()
+                    .AddText("Info")
+                    .AddText(message)
+                    .BuildNotification();
+
+                AppNotificationManager.Default.Show(notification);
+            }
+            catch (Exception ex)
+            {
+                LogService.LogError("[Notification] Failed to show info notification", ex);
+            }
+        }
+
+        public static void ShowErrorNotification(string message)
+        {
+            try
+            {
+                var notification = new AppNotificationBuilder()
+                    .AddText("Error")
+                    .AddText(message)
+                    .BuildNotification();
+
+                AppNotificationManager.Default.Show(notification);
+            }
+            catch (Exception ex)
+            {
+                LogService.LogError("[Notification] Failed to show error notification", ex);
+            }
+        }
+
         public static void ShowUpdateAvailableNotification(string version, string releaseUrl)
         {
             try
             {
                 var notification = new AppNotificationBuilder()
                     .AddText("Update Available")
-                    .AddText($"Fluent Scrobbler {version} is available for download.")
+                    .AddText($"FluentScrobbler for Last.fm blocked countries {version} is available for download.")
                     .AddArgument("action", "open_update_url")
                     .AddArgument("url", releaseUrl)
                     .BuildNotification();

@@ -195,7 +195,7 @@
 
                         <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2" Margin="0,0,16,0">
                             <TextBlock Text="Start on Windows startup" Style="{ThemeResource BodyStrongTextBlockStyle}" />
-                            <TextBlock Text="Automatically launch Fluent Scrobbler when you sign in to Windows." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
+                            <TextBlock Text="Automatically launch FluentScrobbler for Last.fm blocked countries when you sign in to Windows." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
                         </StackPanel>
 
                         <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center" HorizontalAlignment="Right">

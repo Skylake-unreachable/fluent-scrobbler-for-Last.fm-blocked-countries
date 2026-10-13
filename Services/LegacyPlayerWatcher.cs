@@ -20,11 +20,6 @@ namespace FluentScrobbler.Services
         private const uint WM_USER = 0x0400;
         private const int IPC_ISPLAYING = 104;
         private const uint PROCESS_QUERY_LIMITED_INFORMATION = 0x1000;
-        private const int IPC_GETLISTPOS = 125;
-        private const int IPC_GETPLAYLISTTITLE = 212;
-        private const int IPC_GETPLAYLISTTITLEW = 213;
-        private const uint PROCESS_VM_READ = 0x0010;
-        private const string ScrollSeparator = " *** ";
 
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         private static extern IntPtr FindWindow(string? lpClassName, string? lpWindowName);
@@ -49,9 +44,6 @@ namespace FluentScrobbler.Services
 
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern bool CloseHandle(IntPtr hObject);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, byte[] lpBuffer, int nSize, out IntPtr lpNumberOfBytesRead);
 
         private static readonly Regex PlayerSuffixRegex = new(
             @"\s*[-–—]\s*(?:Winamp(?:\s+[\d\.]+)?|AIMP(?:\s+[\d\.]+)?)\s*$",
@@ -201,9 +193,8 @@ namespace FluentScrobbler.Services
                     _ => LegacyPlaybackState.Stopped
                 };
 
-                string? ipcTitle = TryGetWinampPlaylistTitle(hWnd, processId);
-                string rawTitle = ipcTitle ?? NormalizeScrollingTitle(GetWindowTitle(hWnd));
-                var (artist, title) = ParseAndCleanTitle(rawTitle, stripTrackNumber: ipcTitle == null);
+                string rawTitle = GetWindowTitle(hWnd);
+                var (artist, title) = ParseAndCleanTitle(rawTitle);
 
                 currentInfo = new LegacyTrackInfo
                 {
@@ -327,7 +318,7 @@ namespace FluentScrobbler.Services
             return (technicalId, displayName, binaryPath);
         }
 
-        public static (string Artist, string Title) ParseAndCleanTitle(string? rawTitle, bool stripTrackNumber = true)
+        public static (string Artist, string Title) ParseAndCleanTitle(string? rawTitle)
         {
             if (string.IsNullOrWhiteSpace(rawTitle))
             {
@@ -344,11 +335,7 @@ namespace FluentScrobbler.Services
                 return (string.Empty, string.Empty);
             }
 
-            if (stripTrackNumber)
-
-            {
-                cleaned = TrackNumberPrefixRegex.Replace(cleaned, string.Empty).Trim();
-            }
+            cleaned = TrackNumberPrefixRegex.Replace(cleaned, string.Empty).Trim();
 
             if (string.IsNullOrWhiteSpace(cleaned))
             {
@@ -364,57 +351,6 @@ namespace FluentScrobbler.Services
             }
 
             return (string.Empty, cleaned);
-        }
-
-        private static string? TryGetWinampPlaylistTitle(IntPtr hWnd, int processId)
-        {
-            int pos = SendMessage(hWnd, WM_USER, IntPtr.Zero, (IntPtr)IPC_GETLISTPOS).ToInt32();
-            if (pos < 0) return null;
-
-            IntPtr remoteW = SendMessage(hWnd, WM_USER, (IntPtr)pos, (IntPtr)IPC_GETPLAYLISTTITLEW);
-            IntPtr remoteA = remoteW == IntPtr.Zero
-                ? SendMessage(hWnd, WM_USER, (IntPtr)pos, (IntPtr)IPC_GETPLAYLISTTITLE)
-                : IntPtr.Zero;
-
-            IntPtr remote = remoteW != IntPtr.Zero ? remoteW : remoteA;
-            if (remote == IntPtr.Zero) return null;
-
-            IntPtr hProcess = OpenProcess(PROCESS_VM_READ, false, processId);
-            if (hProcess == IntPtr.Zero) return null;
-
-            try
-            {
-                foreach (int size in new[] { 1024, 256 })
-                {
-                    var buffer = new byte[size];
-                    if (!ReadProcessMemory(hProcess, remote, buffer, size, out _)) continue;
-
-                    string text = remoteW != IntPtr.Zero
-                        ? Encoding.Unicode.GetString(buffer)
-                        : Encoding.Default.GetString(buffer);
-
-                    int nul = text.IndexOf('\0');
-                    text = nul >= 0 ? text[..nul] : text;
-                    return string.IsNullOrWhiteSpace(text) ? null : text;
-                }
-                return null;
-            }
-            finally
-            {
-                CloseHandle(hProcess);
-            }
-        }
-
-        private static string NormalizeScrollingTitle(string rawTitle)
-        {
-            if (string.IsNullOrEmpty(rawTitle)) return rawTitle;
-
-            string doubled = rawTitle + rawTitle;
-            int idx = doubled.IndexOf(ScrollSeparator, StringComparison.Ordinal);
-            if (idx < 0) return rawTitle;
-
-            int length = rawTitle.Length - ScrollSeparator.Length;
-            return length > 0 ? doubled.Substring(idx + ScrollSeparator.Length, length) : rawTitle;
         }
 
         private static string GetWindowTitle(IntPtr hWnd)

@@ -26,7 +26,10 @@ namespace FluentScrobbler.Services.Media
 
         private readonly string _dir;
         private readonly SQLiteAsyncConnection _db;
-        private readonly HttpClient _http = new() { Timeout = TimeSpan.FromSeconds(15) };
+
+        // Загрузка обложек идет через общий HttpClient ProxyService, чтобы изображения
+        // с Last.fm тоже загружались через прокси (важно для стран, где Last.fm заблокирован).
+        private readonly HttpClient _http = FluentScrobbler.Services.Proxy.ProxyService.Instance.HttpClient;
 
         private CoverCacheService()
         {

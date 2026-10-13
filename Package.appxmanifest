@@ -10,10 +10,10 @@
   <Identity
     Name="SnowMint.FluentScrobbler"
     Publisher="CN=F1453FA1-AD03-43D6-B338-B09F9D23593A"
-    Version="1.1.1.0" />
+    Version="1.1.0.0" />
 
   <Properties>
-    <DisplayName>FluentScrobbler</DisplayName>
+    <DisplayName>FluentScrobbler for Last.fm blocked countries</DisplayName>
     <PublisherDisplayName>Snow Mint</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -32,8 +32,8 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="FluentScrobbler"
-        Description="FluentScrobbler"
+        DisplayName="FluentScrobbler for Last.fm blocked countries"
+        Description="FluentScrobbler for Last.fm blocked countries"
         BackgroundColor="transparent"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png">
@@ -46,7 +46,7 @@
           <uap5:StartupTask
             TaskId="FluentScrobblerStartup"
             Enabled="false"
-            DisplayName="FluentScrobbler" />
+            DisplayName="FluentScrobbler for Last.fm blocked countries" />
         </uap5:Extension>
       </Extensions>
     </Application>

@@ -90,7 +90,7 @@ namespace FluentScrobbler.Views
 
         private async void CopySystemInfoButton_Click(object sender, RoutedEventArgs e)
         {
-            string info = $"- App: Fluent Scrobbler {AppInfoService.FormattedVersion}\n" +
+            string info = $"- App: FluentScrobbler for Last.fm blocked countries {AppInfoService.FormattedVersion}\n" +
                           $"- OS: {RuntimeInformation.OSDescription}\n" +
                           $"- Architecture: {RuntimeInformation.OSArchitecture} (Process: {RuntimeInformation.ProcessArchitecture})\n" +
                           $"- Framework: {RuntimeInformation.FrameworkDescription}\n" +

@@ -8,12 +8,12 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Windows.Security.Credentials;
 using FluentScrobbler.Models;
+using FluentScrobbler.Services.Proxy;
 
 namespace FluentScrobbler.Services
 {
-    public class LastFmService : IScrobbleProvider
+    public class LastFmService
     {
-        public string Name => "Last.fm";
         public static event EventHandler<(string Track, string Artist, bool IsLoved)>? TrackLoveChanged;
 
         private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, bool> _localLoveCache = new(StringComparer.OrdinalIgnoreCase);
@@ -49,17 +49,16 @@ namespace FluentScrobbler.Services
 
         static LastFmService()
         {
-            var h = new SocketsHttpHandler
+            // Все запросы к Last.fm идут через общий HttpClient из ProxyService (код прокси
+            // вынесен в отдельную папку Services/Proxy). Если в настройках включен прокси
+            // (режим Manual или Auto) - трафик идет через SOCKS5-сервер, иначе - напрямую.
+            // Текущий прокси читается при каждом новом соединении, поэтому его смена
+            // применяется без перезапуска приложения.
+            _httpClient = ProxyService.Instance.HttpClient;
+            if (!_httpClient.DefaultRequestHeaders.Contains("User-Agent"))
             {
-                PooledConnectionLifetime = TimeSpan.FromMinutes(2),
-                PooledConnectionIdleTimeout = TimeSpan.FromSeconds(30),
-                ConnectTimeout = TimeSpan.FromSeconds(10)
-            };
-            _httpClient = new HttpClient(h)
-            {
-                Timeout = TimeSpan.FromSeconds(15)
-            };
-            _httpClient.DefaultRequestHeaders.Add("User-Agent", "FluentScrobbler-WindowsApp/1.0");
+                _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "FluentScrobbler-WindowsApp/1.0");
+            }
         }
 
         public LastFmService()

@@ -21,8 +21,8 @@
                     <Image Grid.Column="0" Source="ms-appx:///Assets/contribute.png" Width="72" Height="72" Stretch="Uniform" VerticalAlignment="Center" />
 
                     <StackPanel Grid.Column="1" Spacing="6" VerticalAlignment="Center">
-                        <TextBlock Text="Contribute to Fluent Scrobbler" Style="{ThemeResource TitleTextBlockStyle}" FontWeight="Bold" />
-                        <TextBlock Text="Fluent Scrobbler is free and open-source. Whether you report bugs, share ideas, contribute code, or buy me a coffee, every bit helps fuel continuous development." Style="{ThemeResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
+                        <TextBlock Text="Contribute to FluentScrobbler for Last.fm blocked countries" Style="{ThemeResource TitleTextBlockStyle}" FontWeight="Bold" />
+                        <TextBlock Text="FluentScrobbler for Last.fm blocked countries is free and open-source. Whether you report bugs, share ideas, contribute code, or buy me a coffee, every bit helps fuel continuous development." Style="{ThemeResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
                     </StackPanel>
                 </Grid>
             </Border>
@@ -42,10 +42,10 @@
 
                         <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="4">
                             <TextBlock Text="Buy Me a Coffee" Style="{ThemeResource BodyStrongTextBlockStyle}" />
-                            <TextBlock Text="If you love using Fluent Scrobbler, consider supporting development with a small donation." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
+                            <TextBlock Text="If you love using FluentScrobbler for Last.fm blocked countries, consider supporting development with a small donation." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
                         </StackPanel>
 
-                        <Button Grid.Column="2" Click="ExternalLink_Click" Tag="https://buymeacoffee.com/snw.mint" VerticalAlignment="Center">
+                        <Button Grid.Column="2" Click="ExternalLink_Click" Tag="https://github.com/Skylake-unreachable" VerticalAlignment="Center">
                             <Button.Content>
                                 <StackPanel Orientation="Horizontal" Spacing="8">
                                     <TextBlock Text="Support Now" />
@@ -75,7 +75,7 @@
                             <TextBlock Text="Experiencing a scrobble glitch or app crash? Open an issue on GitHub to help us fix it." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
                         </StackPanel>
 
-                        <Button Grid.Column="2" Click="ExternalLink_Click" Tag="https://github.com/snw-mint/fluent-scrobbler/issues/new?template=bug_report.yml" VerticalAlignment="Center">
+                        <Button Grid.Column="2" Click="ExternalLink_Click" Tag="https://github.com/Skylake-unreachable/fluent-scrobbler-for-Last.fm-blocked-countries/issues/new?template=bug_report.yml" VerticalAlignment="Center">
                             <Button.Content>
                                 <StackPanel Orientation="Horizontal" Spacing="8">
                                     <TextBlock Text="Report Issue" />
@@ -105,7 +105,7 @@
                             <TextBlock Text="Have an idea future releases? Share your feedback with the community." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
                         </StackPanel>
 
-                        <Button Grid.Column="2" Click="ExternalLink_Click" Tag="https://github.com/snw-mint/fluent-scrobbler/issues/new?template=feature_request.yml" VerticalAlignment="Center">
+                        <Button Grid.Column="2" Click="ExternalLink_Click" Tag="https://github.com/Skylake-unreachable/fluent-scrobbler-for-Last.fm-blocked-countries/issues/new?template=feature_request.yml" VerticalAlignment="Center">
                             <Button.Content>
                                 <StackPanel Orientation="Horizontal" Spacing="8">
                                     <TextBlock Text="Submit Request" />
@@ -135,7 +135,7 @@
                             <TextBlock Text="Star the repository, inspect the code, or submit a Pull Request to help improve the app." Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
                         </StackPanel>
 
-                        <Button Grid.Column="2" Click="ExternalLink_Click" Tag="https://github.com/snw-mint/fluent-scrobbler" VerticalAlignment="Center">
+                        <Button Grid.Column="2" Click="ExternalLink_Click" Tag="https://github.com/Skylake-unreachable/fluent-scrobbler-for-Last.fm-blocked-countries" VerticalAlignment="Center">
                             <Button.Content>
                                 <StackPanel Orientation="Horizontal" Spacing="8">
                                     <TextBlock Text="View Repository" />

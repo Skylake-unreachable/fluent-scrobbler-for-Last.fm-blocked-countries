@@ -7,6 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ic="using:FluentIcons.WinUI"
+    xmlns:proxy="using:FluentScrobbler.Views.Proxy"
     mc:Ignorable="d">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="32,24" SizeChanged="ScrollViewer_SizeChanged">
@@ -158,6 +159,8 @@
                     </Grid>
                 </Border>
             </StackPanel>
+
+            <proxy:ProxySection />
 
         </StackPanel>
     </ScrollViewer>
